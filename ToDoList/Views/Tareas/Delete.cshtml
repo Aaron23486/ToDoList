@@ -1,0 +1,82 @@
+﻿@model ToDoList.Data.Entities.Tarea
+
+@{
+    ViewData["Title"] = "Eliminar";
+}
+
+<div class="container my-5">
+    <div class="row justify-content-center align-items-center mb-4">
+        <div class="col-12 text-center">
+            <h1 class="display-4 text-dark">Eliminar Tarea</h1>
+            <h3>¿Estás seguro de que deseas eliminar esta tarea?</h3>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Información de la Tarea</h4>
+                    <hr />
+                    <dl class="row">
+                        <!-- Título -->
+                        <dt class="col-sm-4">
+                            Título
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.Title)
+                        </dd>
+
+                        <!-- Descripción -->
+                        <dt class="col-sm-4">
+                            Descripción
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.Description)
+                        </dd>
+
+                        <!-- Fecha de Vencimiento -->
+                        <dt class="col-sm-4">
+                            Fecha de Vencimiento
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.DueDate, "{0:MMMM dd, yyyy}")
+                        </dd>
+
+                        <!-- Estado de la tarea -->
+                        <dt class="col-sm-4">
+                            Estado
+                        </dt>
+                        <dd class="col-sm-8">
+                            @if (Model.IsCompleted)
+                            {
+                                <span class="badge bg-success">Completada</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">No Completada</span>
+                            }
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4 text-center">
+        <!-- Formulario de eliminación con botón -->
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="TareaId" />
+            <button type="submit" class="btn btn-danger">
+                <i class="bi bi-trash"></i> Eliminar
+            </button>
+            <a class="btn btn-outline-secondary" asp-action="Index">
+                <i class="bi bi-arrow-left-circle"></i> Volver a la Lista
+            </a>
+        </form>
+    </div>
+
+</div>
+
+<!-- Enlace a Bootstrap Icons para cargar los iconos -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">

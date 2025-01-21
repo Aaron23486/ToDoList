@@ -1,0 +1,63 @@
+﻿@model ToDoList.Data.Entities.Tarea
+
+@{
+    ViewData["Title"] = "Crear Tarea";
+}
+
+<div class="container my-5">
+    <div class="row justify-content-between align-items-center mb-4">
+        <div class="col-12 text-center">
+            <h1 class="display-4 text-dark">Crear Tarea</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <!-- Título -->
+                <div class="form-group">
+                    <label asp-for="Title" class="control-label">Título</label>
+                    <input asp-for="Title" class="form-control" />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+
+                <!-- Descripción -->
+                <div class="form-group">
+                    <label asp-for="Description" class="control-label">Descripción</label>
+                    <input asp-for="Description" class="form-control" />
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+                <!-- Fecha de vencimiento -->
+                <div class="form-group">
+                    <label asp-for="DueDate" class="control-label">Fecha de Vencimiento</label>
+                    <input asp-for="DueDate" class="form-control" />
+                    <span asp-validation-for="DueDate" class="text-danger"></span>
+                </div>
+
+                <!-- Espacio entre los campos y los botones -->
+                <div class="form-group mt-4">
+                    <!-- Botón Crear Tarea con icono de caset -->
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-save"></i> Guardar Tarea
+                    </button>
+                    <!-- Botón Volver a la Lista con icono de regreso -->
+                    <a asp-action="Index" class="btn btn-outline-secondary ml-2">
+                        <i class="bi bi-arrow-left-circle"></i> Volver a la Lista
+                    </a>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
