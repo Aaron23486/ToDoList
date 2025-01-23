@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ToDoList.Data;
 using ToDoList.Data.Entities;
-using Tarea = ToDoList.Data.Entities.Tarea; // Asegúrate de que 'Tarea' se esté usando correctamente
 
 namespace ToDoList.Controllers
 {
@@ -75,48 +74,35 @@ namespace ToDoList.Controllers
             return View(tarea);
         }
 
-        // GET: Tareas/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        // Método GET para cargar la vista de edición
+        public async Task<IActionResult> Edit(int id)
         {
-            if (id == null)
+            // Buscar la tarea en la base de datos
+            var task = await _context.Tareas.FindAsync(id);
+            if (task == null)
             {
                 return NotFound();
             }
 
-            var tarea = await _context.Tareas.FindAsync(id);
-            if (tarea == null)
-            {
-                return NotFound();
-            }
-
-            // Verifica que haya usuarios disponibles
-            var usuarios = await _context.Usuarios.ToListAsync();
-            if (usuarios == null || !usuarios.Any())
-            {
-                // Maneja el caso en que no hay usuarios disponibles
-                ModelState.AddModelError(string.Empty, "No hay usuarios disponibles.");
-            }
-
-            // Si la lista de usuarios no es nula, pasamos los datos a la vista
-            ViewData["UsuarioId"] = new SelectList(usuarios ?? new List<Usuario>(), "UsuarioId", "UserName", tarea.UserId);
-            return View(tarea);
+            return View(task); // Pasar el modelo a la vista
         }
 
-        // POST: Tareas/Edit/5
+        // Método POST para guardar los cambios
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("TareaId,Title,Description,DueDate,IsCompleted,UserId")] Tarea tarea)
+        public async Task<IActionResult> Edit(int id, Tarea tarea) // Cambié 'Task' a 'Tarea'
         {
             if (id != tarea.TareaId)
             {
-                return NotFound();
+                return BadRequest();
             }
 
+            ModelState.Remove("Usuario");
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(tarea);
+                    _context.Update(tarea); // Usar el modelo con el nombre correcto
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -130,13 +116,14 @@ namespace ToDoList.Controllers
                         throw;
                     }
                 }
+
                 return RedirectToAction(nameof(Index));
             }
 
-            var usuarios = await _context.Usuarios.ToListAsync();
-            ViewData["UsuarioId"] = new SelectList(usuarios ?? new List<Usuario>(), "UsuarioId", "UserName", tarea.UserId);
-            return View(tarea);
+            return View(tarea); // Si hay errores, volver a mostrar la vista
         }
+
+
 
 
         private bool TareaExists(int id)
