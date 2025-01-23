@@ -20,19 +20,33 @@ namespace ToDoList.Controllers
         }
 
         // GET: Tareas
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(DateTime? startDate, DateTime? endDate)
         {
             // Recupera todas las tareas y sus usuarios asociados
-            var tareas = await _context.Tareas
-                                        .Include(t => t.Usuario) // Incluye los datos del usuario relacionado
-                                        .ToListAsync();
+            var tareas = _context.Tareas.Include(t => t.Usuario).AsQueryable();
+
+            // Si se proporcionó una fecha de inicio, filtra las tareas
+            if (startDate.HasValue)
+            {
+                tareas = tareas.Where(t => t.DueDate >= startDate.Value);
+            }
+
+            // Si se proporcionó una fecha de fin, filtra las tareas
+            if (endDate.HasValue)
+            {
+                tareas = tareas.Where(t => t.DueDate <= endDate.Value);
+            }
+
+            // Recupera la lista de tareas filtradas
+            var tareasList = await tareas.ToListAsync();
 
             // Puedes agregar algo a ViewData si necesitas pasar más información
             ViewData["Title"] = "Lista de Tareas";  // Por ejemplo, para personalizar el título de la página
 
-            // Retorna la vista con las tareas
-            return View(tareas);
+            // Retorna la vista con las tareas filtradas
+            return View(tareasList);
         }
+
 
 
         // GET: Tareas/Details/5

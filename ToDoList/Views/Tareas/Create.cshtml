@@ -39,10 +39,11 @@
 
                 <!-- Espacio entre los campos y los botones -->
                 <div class="form-group mt-4">
-                    <!-- Botón Crear Tarea con icono de caset -->
-                    <button type="submit" class="btn btn-primary">
+                    <!-- Botón Crear Tarea con deshabilitación después de clic -->
+                    <button type="submit" id="createTaskButton" class="btn btn-primary">
                         <i class="bi bi-save"></i> Guardar Tarea
                     </button>
+
                     <!-- Botón Volver a la Lista con icono de regreso -->
                     <a asp-action="Index" class="btn btn-outline-secondary ml-2">
                         <i class="bi bi-arrow-left-circle"></i> Volver a la Lista
@@ -60,4 +61,24 @@
 
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.querySelector("form");
+            const createButton = document.getElementById("createTaskButton");
+
+            if (form && createButton) {
+                form.addEventListener("submit", function (event) {
+                    // Verifica si el formulario es válido
+                    if (form.checkValidity()) {
+                        // Deshabilita el botón solo si el formulario pasa la validación
+                        createButton.disabled = true;
+                    } else {
+                        // Si no es válido, previene el envío para mostrar errores de validación
+                        event.preventDefault();
+                    }
+                });
+            }
+        });
+    </script>
 }
